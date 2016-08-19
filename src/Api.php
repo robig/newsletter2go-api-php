@@ -108,6 +108,19 @@ class Api
 
         return $this->curl($endpoint, $data);
     }
+	
+	public function getRecipients($filter = null)
+    {
+
+        $endpoint = "/recipients";
+
+		$data = array(
+			"_filter" => $filter,
+            "_expand" => true
+        );
+
+        return $this->curl($endpoint, $data);
+    }
 
 
     /**
