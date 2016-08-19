@@ -120,6 +120,14 @@ class Api
         );
 
         return $this->curl($endpoint, $data);
+	}
+
+
+    public function createRecipient($list_id, $email, $first_name, $last_name)
+    {
+        $endpoint = "/recipients";
+
+        return $this->curl($endpoint, array("list_id" => $list_id, "email" => $email, "first_name" => $first_name, "last_name" => $last_name), static::METHOD_POST);
     }
 
 
