@@ -151,15 +151,21 @@ class Api
     public function deleteRecipient($list, $id)
 	{
 		$endpoint = "";
-		if($list) $endpoint = "/list/$list";
+		if($list) $endpoint = "/lists/$list";
 		$endpoint .= "/recipients/$id";
-		$ret = array('endpoint'=>$endpoint);
+		//$ret = array('endpoint'=>$endpoint);
 
-		$rc = $this->curl($endpoint, array(), static::METHOD_DELETE);
-		if(is_array($rc)) $ret = array_merge($ret, $rc);
-		else $ret['curl'] = $rc;
-		return $ret;
+		return $this->curl($endpoint, array(), static::METHOD_DELETE);
     }
+
+    public function deleteMail($list, $email)
+    {
+        $endpoint = "/list/$list";
+        $endpoint .= "/recipients/$id";
+        $filter = "email==\"$email\"";
+        return $this->curl($endpoint, array('_filter'=>$filter), static::METHOD_DELETE);
+    }
+
 
     /**
      * @param $endpoint string the endpoint to call (see docs.newsletter2go.com)
