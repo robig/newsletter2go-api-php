@@ -71,6 +71,13 @@ class Api
         $endpoint = "/lists/$listId/newsletters";
 
         return $this->curl($endpoint, array());
+	}
+	
+	public function getCompanies()
+    {
+        $endpoint = "/companies";
+
+        return $this->curl($endpoint, array());
     }
 
     public function createNewsletter($listId, $type, $name, $subject, $html)
@@ -109,14 +116,15 @@ class Api
         return $this->curl($endpoint, $data);
     }
 	
-	public function getRecipients($filter = null)
+	public function getRecipients($filter = null, $limit = 50)
     {
 
         $endpoint = "/recipients";
 
 		$data = array(
 			"_filter" => $filter,
-            "_expand" => true
+			"_expand" => true,
+			"_limit" => $limit
         );
 
         return $this->curl($endpoint, $data);
@@ -128,8 +136,30 @@ class Api
         $endpoint = "/recipients";
 
         return $this->curl($endpoint, array("list_id" => $list_id, "email" => $email, "first_name" => $first_name, "last_name" => $last_name), static::METHOD_POST);
-    }
+	}
 
+    public function createRecipientDOI($code, $email, $first_name, $last_name)
+    {
+		$endpoint = "/forms/submit/$code";
+
+		$data = array('recipient'=>array("email" => $email, "first_name" => $first_name, "last_name" => $last_name));
+
+        return $this->curl($endpoint, $data, static::METHOD_POST);
+    }
+	
+
+    public function deleteRecipient($list, $id)
+	{
+		$endpoint = "";
+		if($list) $endpoint = "/list/$list";
+		$endpoint .= "/recipients/$id";
+		$ret = array('endpoint'=>$endpoint);
+
+		$rc = $this->curl($endpoint, array(), static::METHOD_DELETE);
+		if(is_array($rc)) $ret = array_merge($ret, $rc);
+		else $ret['curl'] = $rc;
+		return $ret;
+    }
 
     /**
      * @param $endpoint string the endpoint to call (see docs.newsletter2go.com)
