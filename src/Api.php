@@ -116,10 +116,11 @@ class Api
         return $this->curl($endpoint, $data);
     }
 	
-	public function getRecipients($filter = null, $limit = 50)
+	public function getRecipients($list = null, $filter = null, $limit = 50)
     {
-
-        $endpoint = "/recipients";
+        $endpoint = "";
+        if($list) $endpoint = "/lists/$list";
+        $endpoint .= "/recipients";
 
 		$data = array(
 			"_filter" => $filter,
