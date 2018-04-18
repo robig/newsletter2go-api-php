@@ -47,10 +47,14 @@ class Api
 
         );
 
-        $response = $this->_curl('Basic ' . base64_encode($this->user_auth_key), $endpoint, $data, "POST");
-
-        $this->access_token = $response->access_token;
-        $this->refresh_token = $response->refresh_token;
+		$response = $this->_curl('Basic ' . base64_encode($this->user_auth_key), $endpoint, $data, "POST");
+		#print_r($response);
+		#
+		if($response === null) return;
+		if(is_object($response) && isset($response->access_token))
+			$this->access_token = $response->access_token;
+		if(is_object($response) && isset($reponse->refresh_token))
+	        $this->refresh_token = $response->refresh_token;
 
     }
 
@@ -227,7 +231,7 @@ class Api
         }
 
         $response = curl_exec($ch);
-        curl_close($ch);
+		curl_close($ch);
 
         return json_decode($response);
     }
